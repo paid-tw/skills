@@ -203,6 +203,11 @@ paid-tw/skills/
 - [綠界科技](https://www.ecpay.com.tw)
 - [PAYUNi](https://www.payuni.com.tw)
 
+## Contributors
+
+- [@linyiru](https://x.com/linyiru)
+- [@handbro666](https://www.threads.com/@handbro666)
+
 ## 授權
 
 MIT License
