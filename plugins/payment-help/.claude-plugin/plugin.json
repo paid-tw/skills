@@ -1,6 +1,6 @@
 {
   "name": "payment-help",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "台灣金流服務比較與推薦 - 幫助選擇最適合的支付方案",
   "author": {
     "name": "paid-tw",
@@ -10,5 +10,6 @@
   "homepage": "https://github.com/paid-tw/skills#payment-help",
   "repository": "https://github.com/paid-tw/skills",
   "license": "MIT",
-  "keywords": ["taiwan", "payment", "comparison", "金流比較", "支付推薦"]
+  "keywords": ["taiwan", "payment", "comparison", "金流比較", "支付推薦"],
+  "skills": "./skills/"
 }
