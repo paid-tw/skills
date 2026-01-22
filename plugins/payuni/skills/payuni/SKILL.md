@@ -12,8 +12,6 @@ allowed-tools:
   - Grep
   - Glob
 user-invocable: true
-context: fork
-agent: payment-integrator
 license: MIT
 metadata:
   author: paid-tw
