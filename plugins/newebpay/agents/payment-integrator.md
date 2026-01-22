@@ -57,7 +57,7 @@ When asked about payment integration:
 | `/newebpay-checkout` | MPG checkout integration | Create payment transactions |
 | `/newebpay-query` | Transaction status query | Check payment status |
 | `/newebpay-refund` | Refund processing | Handle refunds |
-| `/ecpay` | ECPay integration guide | Green World integration |
+| `/ecpay` | ECPay integration guide | ECPay integration |
 | `/payuni` | PAYUNi integration guide | Unified payment integration |
 
 ## Code Examples
