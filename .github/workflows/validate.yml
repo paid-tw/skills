@@ -7,6 +7,31 @@ on:
     branches: [main]
 
 jobs:
+  validate-schema:
+    name: Validate Plugin Schema
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Validate marketplace
+        run: claude plugin validate .
+
+      - name: Validate individual plugins
+        run: |
+          for plugin in plugins/*/; do
+            echo "Validating $plugin..."
+            claude plugin validate "$plugin"
+          done
+
   validate-json:
     name: Validate JSON Syntax
     runs-on: ubuntu-latest

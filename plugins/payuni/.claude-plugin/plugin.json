@@ -10,6 +10,5 @@
   "homepage": "https://github.com/paid-tw/skills#payuni",
   "repository": "https://github.com/paid-tw/skills",
   "license": "MIT",
-  "keywords": ["taiwan", "payment", "payuni", "統一金流", "金流"],
-  "skills": "./skills/"
+  "keywords": ["taiwan", "payment", "payuni", "統一金流", "金流"]
 }

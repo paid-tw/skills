@@ -10,6 +10,5 @@
   "homepage": "https://github.com/paid-tw/skills#payment-help",
   "repository": "https://github.com/paid-tw/skills",
   "license": "MIT",
-  "keywords": ["taiwan", "payment", "comparison", "金流比較", "支付推薦"],
-  "skills": "./skills/"
+  "keywords": ["taiwan", "payment", "comparison", "金流比較", "支付推薦"]
 }
