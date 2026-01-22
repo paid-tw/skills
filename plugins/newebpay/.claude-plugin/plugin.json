@@ -1,0 +1,10 @@
+{
+  "name": "newebpay",
+  "version": "1.0.0",
+  "description": "藍新金流(NewebPay)串接指南 - 信用卡、LINE Pay、ATM、超商",
+  "author": {
+    "name": "paid-tw"
+  },
+  "license": "MIT",
+  "keywords": ["taiwan", "payment", "newebpay", "藍新", "金流", "credit-card", "line-pay"]
+}
