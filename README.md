@@ -14,24 +14,24 @@
 
 ## 安裝
 
-### 方式一：npx add-skill（推薦）
+### 方式一：npx skills（推薦）
 
-使用 [add-skill CLI](https://github.com/anthropics/add-skill) 選擇性安裝需要的 skills：
+使用 [skills CLI](https://skills.sh) 選擇性安裝需要的 skills：
 
 ```bash
 # 查看可用的 skills
-npx add-skill paid-tw/skills --list
+npx skills add paid-tw/skills --list
 
 # 選擇性安裝
-npx add-skill paid-tw/skills --skill newebpay      # 只裝藍新金流
-npx add-skill paid-tw/skills --skill ecpay         # 只裝綠界科技
-npx add-skill paid-tw/skills --skill payuni        # 只裝 PAYUNi
+npx skills add paid-tw/skills --skill newebpay      # 只裝藍新金流
+npx skills add paid-tw/skills --skill ecpay         # 只裝綠界科技
+npx skills add paid-tw/skills --skill payuni        # 只裝 PAYUNi
 
 # 安裝多個
-npx add-skill paid-tw/skills --skill newebpay ecpay
+npx skills add paid-tw/skills --skill newebpay ecpay
 
 # 安裝全部
-npx add-skill paid-tw/skills --all
+npx skills add paid-tw/skills --all
 ```
 
 支援多種 AI coding agents：Claude Code、Cursor、Codex、GitHub Copilot、Antigravity、Roo Code 等。
@@ -65,7 +65,7 @@ rm -rf /tmp/paid-tw-skills
 不確定從哪開始？安裝 `payment-help` skill：
 
 ```bash
-npx add-skill paid-tw/skills --skill payment-help
+npx skills add paid-tw/skills --skill payment-help
 ```
 
 然後問 Claude：
