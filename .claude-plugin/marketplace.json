@@ -29,6 +29,13 @@
       "description": "PAYUNi 統一金流串接",
       "version": "1.0.0",
       "keywords": ["payuni", "統一金流"]
+    },
+    {
+      "name": "payment-help",
+      "source": "./plugins/payment-help",
+      "description": "台灣金流服務比較與推薦",
+      "version": "1.0.0",
+      "keywords": ["payment", "comparison", "金流比較", "推薦"]
     }
   ]
 }

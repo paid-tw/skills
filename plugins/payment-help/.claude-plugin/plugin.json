@@ -1,0 +1,11 @@
+{
+  "name": "payment-help",
+  "version": "1.0.0",
+  "description": "台灣金流服務比較與推薦 - 幫助選擇最適合的支付方案",
+  "author": {
+    "name": "paid-tw"
+  },
+  "license": "MIT",
+  "keywords": ["taiwan", "payment", "comparison", "金流比較", "支付推薦"],
+  "skills": ["payment-help"]
+}
