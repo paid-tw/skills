@@ -10,13 +10,6 @@
   },
   "plugins": [
     {
-      "name": "payment-help",
-      "source": "./plugins/payment-help",
-      "description": "列出所有可用的台灣支付金流 skills",
-      "version": "1.0.0",
-      "keywords": ["help", "guide"]
-    },
-    {
       "name": "newebpay",
       "source": "./plugins/newebpay",
       "description": "藍新金流(NewebPay)完整串接 - 支付串接、交易查詢、退款",

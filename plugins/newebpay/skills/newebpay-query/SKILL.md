@@ -1,7 +1,19 @@
 ---
 name: newebpay-query
-description: 藍新金流交易查詢 API。觸發於「藍新查詢」「查詢訂單」「交易狀態」相關問題。
-allowed-tools: Read, Grep, Glob
+description: >
+  Queries NewebPay transaction status and payment details using QueryTradeInfo API.
+  Use when checking order status, retrieving transaction information, or verifying payment completion.
+  Triggers: "newebpay query", "藍新查詢", "查詢訂單", "交易狀態", "transaction status"
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Grep
+  - Glob
+user-invocable: true
+context: fork
+agent: payment-integrator
 license: MIT
 metadata:
   author: paid-tw

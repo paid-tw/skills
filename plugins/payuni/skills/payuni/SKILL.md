@@ -1,6 +1,19 @@
 ---
 name: payuni
-description: PAYUNi 統一金流串接指南。使用於 "PAYUNi", "統一金流", "payuni" 相關問題。
+description: >
+  Provides PAYUNi (統一金流) integration guide including payment gateway setup and API configuration.
+  Use when integrating PAYUNi payment services or unified payment solutions.
+  Triggers: "payuni", "PAYUNi", "統一金流", "payuni integration", "unified payment"
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Grep
+  - Glob
+user-invocable: true
+context: fork
+agent: payment-integrator
 license: MIT
 metadata:
   author: paid-tw

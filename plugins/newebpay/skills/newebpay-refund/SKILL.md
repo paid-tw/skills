@@ -1,8 +1,20 @@
 ---
 name: newebpay-refund
-description: 藍新金流退款 API。觸發於「藍新退款」「信用卡退款」「取消交易」相關問題。
+description: >
+  Processes NewebPay refund requests for credit cards and e-wallets using CreditCard/Close
+  and EWallet/Refund APIs. Use when handling refunds, canceling transactions, or processing return payments.
+  Triggers: "newebpay refund", "藍新退款", "信用卡退款", "取消交易", "refund payment"
 argument-hint: "[類型: 信用卡/電子錢包]"
-allowed-tools: Read, Grep, Glob
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Grep
+  - Glob
+user-invocable: true
+context: fork
+agent: payment-integrator
 license: MIT
 metadata:
   author: paid-tw

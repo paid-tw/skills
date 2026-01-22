@@ -1,8 +1,21 @@
 ---
 name: newebpay
-description: 藍新金流(NewebPay)總覽與快速開始指南。觸發於「藍新」「NewebPay」「藍新金流」「藍新怎麼用」「藍新 help」「藍新串接教學」相關問題。
+description: >
+  Provides NewebPay integration overview and quick start guide including environment setup,
+  encryption/decryption utilities, and skill routing. Use when starting NewebPay integration
+  or needing general NewebPay guidance.
+  Triggers: "newebpay", "藍新", "NewebPay", "藍新金流", "newebpay help", "藍新串接教學"
 argument-hint: "[功能: checkout/query/refund]"
-allowed-tools: Read, Grep, Glob
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Grep
+  - Glob
+user-invocable: true
+context: fork
+agent: payment-integrator
 license: MIT
 metadata:
   author: paid-tw

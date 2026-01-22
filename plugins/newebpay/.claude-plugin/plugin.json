@@ -7,5 +7,6 @@
   },
   "license": "MIT",
   "keywords": ["taiwan", "payment", "newebpay", "藍新", "金流", "credit-card", "line-pay", "atm", "cvs"],
-  "skills": ["newebpay", "newebpay-checkout", "newebpay-query", "newebpay-refund"]
+  "skills": ["newebpay", "newebpay-checkout", "newebpay-query", "newebpay-refund"],
+  "agents": ["payment-integrator"]
 }

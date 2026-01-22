@@ -1,8 +1,21 @@
 ---
 name: newebpay-checkout
-description: 藍新金流 MPG 幕前支付串接。觸發於「藍新串接」「建立交易」「MPG」「付款頁面」相關問題。
+description: >
+  Processes NewebPay MPG checkout integration including AES256 encryption, SHA256 signing,
+  and form submission setup. Use when integrating NewebPay payment gateway, creating transactions,
+  or setting up MPG payment pages.
+  Triggers: "newebpay checkout", "藍新串接", "建立交易", "MPG", "payment integration"
 argument-hint: "[支付方式: 信用卡/LINE Pay/ATM/超商]"
-allowed-tools: Read, Grep, Glob
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Grep
+  - Glob
+user-invocable: true
+context: fork
+agent: payment-integrator
 license: MIT
 metadata:
   author: paid-tw

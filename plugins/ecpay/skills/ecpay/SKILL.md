@@ -1,6 +1,19 @@
 ---
 name: ecpay
-description: 綠界科技(ECPay)串接指南。使用於 "綠界", "ECPay", "綠界科技", "綠界發票" 相關問題。
+description: >
+  Provides ECPay (綠界科技) integration guide including payment setup and electronic invoice integration.
+  Use when integrating ECPay payment gateway or electronic invoice features.
+  Triggers: "ecpay", "綠界", "ECPay", "綠界科技", "綠界發票", "ecpay integration"
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Grep
+  - Glob
+user-invocable: true
+context: fork
+agent: payment-integrator
 license: MIT
 metadata:
   author: paid-tw
