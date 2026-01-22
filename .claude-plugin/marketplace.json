@@ -1,0 +1,41 @@
+{
+  "name": "taiwan-payment-skills",
+  "owner": {
+    "name": "paid-tw",
+    "email": "contact@paid.tw"
+  },
+  "metadata": {
+    "description": "台灣第三方支付金流串接 Skills for Claude Code",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "payment-help",
+      "source": "./plugins/payment-help",
+      "description": "列出所有可用的台灣支付金流 skills",
+      "version": "1.0.0",
+      "keywords": ["help", "guide"]
+    },
+    {
+      "name": "newebpay",
+      "source": "./plugins/newebpay",
+      "description": "藍新金流(NewebPay)串接 - 信用卡、LINE Pay、ATM、超商",
+      "version": "1.0.0",
+      "keywords": ["newebpay", "藍新", "credit-card", "line-pay"]
+    },
+    {
+      "name": "ecpay",
+      "source": "./plugins/ecpay",
+      "description": "綠界科技(ECPay)串接 - 全方位金流、電子發票",
+      "version": "1.0.0",
+      "keywords": ["ecpay", "綠界", "invoice"]
+    },
+    {
+      "name": "payuni",
+      "source": "./plugins/payuni",
+      "description": "PAYUNi 統一金流串接",
+      "version": "1.0.0",
+      "keywords": ["payuni", "統一金流"]
+    }
+  ]
+}
