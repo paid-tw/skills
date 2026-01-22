@@ -1,6 +1,9 @@
 # 台灣支付金流 Skills
 
-專為 AI Agents 打造的台灣第三方支付金流串接 Skills。
+[![Validate Plugins](https://github.com/paid-tw/skills/actions/workflows/validate.yml/badge.svg)](https://github.com/paid-tw/skills/actions/workflows/validate.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+台灣第三方金流 Skills for AI Agents - 藍新金流、綠界科技 ECPay、統一金流 PAYUNi
 
 支援 Claude Code、Cursor、Codex、GitHub Copilot 等 AI coding agents。
 

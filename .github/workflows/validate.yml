@@ -1,0 +1,85 @@
+name: Validate Plugins
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-json:
+    name: Validate JSON Syntax
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate marketplace.json
+        run: |
+          echo "Validating .claude-plugin/marketplace.json..."
+          python3 -m json.tool .claude-plugin/marketplace.json > /dev/null
+
+      - name: Validate plugin.json files
+        run: |
+          for file in plugins/*/.claude-plugin/plugin.json; do
+            echo "Validating $file..."
+            python3 -m json.tool "$file" > /dev/null
+          done
+
+  validate-structure:
+    name: Validate Plugin Structure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check required files
+        run: |
+          errors=0
+
+          # Check marketplace.json exists
+          if [ ! -f ".claude-plugin/marketplace.json" ]; then
+            echo "❌ Missing .claude-plugin/marketplace.json"
+            errors=$((errors + 1))
+          else
+            echo "✅ .claude-plugin/marketplace.json exists"
+          fi
+
+          # Check each plugin has required structure
+          for plugin in plugins/*/; do
+            plugin_name=$(basename "$plugin")
+
+            # Check plugin.json
+            if [ ! -f "$plugin/.claude-plugin/plugin.json" ]; then
+              echo "❌ Missing $plugin/.claude-plugin/plugin.json"
+              errors=$((errors + 1))
+            else
+              echo "✅ $plugin_name: plugin.json exists"
+            fi
+
+            # Check skills directory
+            if [ ! -d "$plugin/skills" ]; then
+              echo "❌ Missing $plugin/skills directory"
+              errors=$((errors + 1))
+            else
+              echo "✅ $plugin_name: skills/ directory exists"
+            fi
+
+            # Check at least one SKILL.md exists
+            skill_count=$(find "$plugin/skills" -name "SKILL.md" 2>/dev/null | wc -l)
+            if [ "$skill_count" -eq 0 ]; then
+              echo "❌ No SKILL.md found in $plugin/skills"
+              errors=$((errors + 1))
+            else
+              echo "✅ $plugin_name: $skill_count skill(s) found"
+            fi
+          done
+
+          if [ $errors -gt 0 ]; then
+            echo ""
+            echo "❌ Found $errors error(s)"
+            exit 1
+          fi
+
+          echo ""
+          echo "✅ All structure checks passed"
