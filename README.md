@@ -1,6 +1,6 @@
 # 台灣支付金流 Skills
 
-為 [Claude Code](https://claude.ai/claude-code) 打造的台灣第三方支付金流串接 Skills。
+專為 AI Agents 打造的台灣第三方支付金流串接 Skills。
 
 支援 Claude Code、Cursor、Codex、GitHub Copilot 等 AI coding agents。
 
