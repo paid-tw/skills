@@ -1,6 +1,6 @@
 ---
 name: newebpay
-description: 藍新金流(NewebPay)總覽與快速開始。觸發於「藍新」「NewebPay」「藍新金流」相關問題。
+description: 藍新金流(NewebPay)總覽與快速開始指南。觸發於「藍新」「NewebPay」「藍新金流」「藍新怎麼用」「藍新 help」「藍新串接教學」相關問題。
 argument-hint: "[功能: checkout/query/refund]"
 allowed-tools: Read, Grep, Glob
 license: MIT
