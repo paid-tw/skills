@@ -205,7 +205,7 @@ paid-tw/skills/
 
 ## Contributors
 
-- [@linyiru](https://x.com/linyiru)
+- [@_linyiru](https://www.threads.com/@_linyiru)
 - [@handbro666](https://www.threads.com/@handbro666)
 
 ## 授權
