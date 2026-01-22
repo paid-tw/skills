@@ -1,0 +1,10 @@
+{
+  "name": "payment-help",
+  "version": "1.0.0",
+  "description": "列出所有可用的台灣支付金流 skills",
+  "author": {
+    "name": "paid-tw"
+  },
+  "license": "MIT",
+  "keywords": ["taiwan", "payment", "help", "金流"]
+}
