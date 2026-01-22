@@ -4,6 +4,7 @@ description: >
   Analyzes user requirements and recommends the best Taiwan payment gateway.
   Provides comparison between NewebPay, ECPay, and PAYUNi based on specific needs.
   Use when choosing a payment solution or comparing 金流服務.
+argument-hint: "[業務類型/需求]"
 user-invocable: true
 ---
 
@@ -13,7 +14,9 @@ user-invocable: true
 
 ## 了解用戶需求
 
-詢問用戶以下問題：
+用戶輸入: `$ARGUMENTS`
+
+根據用戶輸入分析需求，若無明確指定則詢問以下問題：
 
 1. **業務類型**：你的業務類型是什麼？
    - 一般電商（實體商品）
