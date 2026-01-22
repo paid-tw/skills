@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "綠界科技(ECPay)串接指南 - 全方位金流、電子發票",
   "author": {
-    "name": "paid-tw"
+    "name": "paid-tw",
+    "email": "contact@paid.tw",
+    "url": "https://github.com/paid-tw"
   },
+  "homepage": "https://github.com/paid-tw/skills#ecpay",
+  "repository": "https://github.com/paid-tw/skills",
   "license": "MIT",
   "keywords": ["taiwan", "payment", "ecpay", "綠界", "金流", "invoice", "電子發票"]
 }

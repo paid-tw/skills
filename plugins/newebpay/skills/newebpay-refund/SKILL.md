@@ -1,10 +1,13 @@
 ---
 name: newebpay-refund
 description: >
-  Processes NewebPay refund requests for credit cards and e-wallets using CreditCard/Close
-  and EWallet/Refund APIs. Use when handling refunds, canceling transactions, or processing return payments.
-  Triggers: "newebpay refund", "藍新退款", "信用卡退款", "取消交易", "refund payment"
+  Implements NewebPay refund functionality for credit cards and e-wallets.
+  Use when building refund processing, transaction cancellation, or return
+  payment features for 藍新金流.
 argument-hint: "[類型: 信用卡/電子錢包]"
+context: fork
+agent: general-purpose
+disable-model-invocation: true
 allowed-tools:
   - Read
   - Write
@@ -13,136 +16,90 @@ allowed-tools:
   - Grep
   - Glob
 user-invocable: true
-context: fork
-agent: payment-integrator
-license: MIT
-metadata:
-  author: paid-tw
-  version: "1.0.0"
 ---
 
-# 藍新金流退款作業
+# 藍新金流退款任務
 
-本 skill 提供藍新金流退款 API 串接指南，包含信用卡退款與電子錢包退款。
+你的任務是在用戶的專案中實作藍新金流退款功能。
 
-## 用戶需求分析
+## Step 1: 確認退款類型
 
 用戶輸入: `$ARGUMENTS`
 
-- 若包含「信用卡」「CREDIT」→ 聚焦信用卡退款 API
-- 若包含「LINE Pay」「電子錢包」→ 聚焦電子錢包退款 API
-- 若無特定指定 → 提供完整概覽
+詢問用戶：
+
+1. **退款類型**：需要處理什麼類型的退款？
+   - 信用卡退款 (CreditCard/Close API)
+   - 電子錢包退款 - LINE Pay, 台灣 Pay 等 (EWallet/Refund API)
+   - 兩者都需要
+
+2. **退款情境**：
+   - 全額退款
+   - 部分退款
+   - 自動退款（與訂單系統整合）
+
+## Step 2: 確認環境
+
+確認專案已設定 NewebPay 環境變數：
+- `NEWEBPAY_MERCHANT_ID`
+- `NEWEBPAY_HASH_KEY`
+- `NEWEBPAY_HASH_IV`
+
+## Step 3: 建立退款模組
+
+根據退款類型建立對應的功能。
+
+**信用卡退款核心功能:**
+- `refundCreditCard(orderNo, amount)` - 信用卡退款
+
+**電子錢包退款核心功能:**
+- `refundEWallet(tradeNo, orderNo, amount)` - 電子錢包退款
+
+## Step 4: 整合到應用
+
+建議整合方式：
+- **管理後台**: 訂單詳情頁加入退款按鈕
+- **API 端點**: `POST /api/orders/:orderNo/refund`
+- **退款記錄**: 建立退款記錄表追蹤
+
+---
 
 ## 信用卡退款
 
 ### API 端點
 
 | 環境 | URL |
-|-----|-----|
+|------|-----|
 | 測試 | `https://ccore.newebpay.com/API/CreditCard/Close` |
 | 正式 | `https://core.newebpay.com/API/CreditCard/Close` |
-
-### 請求參數
-
-| 參數 | 類型 | 必填 | 說明 |
-|-----|------|:----:|------|
-| MerchantID_ | String | ✓ | 商店代號 |
-| PostData_ | String | ✓ | AES256 加密資料 |
 
 ### PostData_ 內容
 
 | 參數 | 類型 | 必填 | 說明 |
-|-----|------|:----:|------|
+|------|------|:----:|------|
 | RespondType | String | ✓ | `JSON` |
 | Version | String | ✓ | `1.1` |
 | Amt | Number | ✓ | 退款金額 |
 | MerchantOrderNo | String | ✓ | 原訂單編號 |
 | TimeStamp | Number | ✓ | Unix timestamp |
-| IndexType | Number | ✓ | 1: 使用訂單編號 |
-| CloseType | Number | ✓ | 2: 退款 |
-
-### PHP 範例
-
-```php
-<?php
-$merchant_id = getenv('NEWEBPAY_MERCHANT_ID');
-$hash_key = getenv('NEWEBPAY_HASH_KEY');
-$hash_iv = getenv('NEWEBPAY_HASH_IV');
-
-// 退款資料
-$refund_data = [
-    'RespondType' => 'JSON',
-    'Version' => '1.1',
-    'Amt' => 1000,  // 退款金額
-    'MerchantOrderNo' => 'ORDER_1234567890',
-    'TimeStamp' => time(),
-    'IndexType' => 1,
-    'CloseType' => 2,  // 退款
-];
-
-// AES256 加密
-$post_data = bin2hex(openssl_encrypt(
-    http_build_query($refund_data),
-    'AES-256-CBC',
-    $hash_key,
-    OPENSSL_RAW_DATA,
-    $hash_iv
-));
-
-// 發送請求
-$ch = curl_init('https://ccore.newebpay.com/API/CreditCard/Close');
-curl_setopt_array($ch, [
-    CURLOPT_POST => true,
-    CURLOPT_POSTFIELDS => http_build_query([
-        'MerchantID_' => $merchant_id,
-        'PostData_' => $post_data,
-    ]),
-    CURLOPT_RETURNTRANSFER => true,
-]);
-$response = curl_exec($ch);
-curl_close($ch);
-
-$result = json_decode($response, true);
-
-if ($result['Status'] === 'SUCCESS') {
-    echo "退款成功";
-}
-```
-
-### 回應參數
-
-| 參數 | 說明 |
-|-----|------|
-| Status | `SUCCESS` 或錯誤代碼 |
-| Message | 回傳訊息 |
-| Result.MerchantOrderNo | 訂單編號 |
-| Result.Amt | 退款金額 |
-| Result.TradeNo | 藍新交易序號 |
+| IndexType | Number | ✓ | `1` (使用訂單編號) |
+| CloseType | Number | ✓ | `2` (退款) |
 
 ---
 
 ## 電子錢包退款
 
-適用於 LINE Pay、台灣 Pay 等電子錢包。
-
 ### API 端點
 
 | 環境 | URL |
-|-----|-----|
+|------|-----|
 | 測試 | `https://ccore.newebpay.com/API/EWallet/Refund` |
 | 正式 | `https://core.newebpay.com/API/EWallet/Refund` |
-
-### 請求參數
-
-| 參數 | 類型 | 必填 | 說明 |
-|-----|------|:----:|------|
-| MerchantID_ | String | ✓ | 商店代號 |
-| PostData_ | String | ✓ | AES256 加密資料 |
 
 ### PostData_ 內容
 
 | 參數 | 類型 | 必填 | 說明 |
-|-----|------|:----:|------|
+|------|------|:----:|------|
 | RespondType | String | ✓ | `JSON` |
 | Version | String | ✓ | `1.0` |
 | TimeStamp | Number | ✓ | Unix timestamp |
@@ -150,60 +107,197 @@ if ($result['Status'] === 'SUCCESS') {
 | MerchantOrderNo | String | ✓ | 原訂單編號 |
 | Amt | Number | ✓ | 退款金額 |
 
-### PHP 範例
+---
+
+## 程式碼範本
+
+### PHP 退款功能
 
 ```php
 <?php
-$refund_data = [
-    'RespondType' => 'JSON',
-    'Version' => '1.0',
-    'TimeStamp' => time(),
-    'TradeNo' => '23120712345678',  // 藍新交易序號
-    'MerchantOrderNo' => 'ORDER_1234567890',
-    'Amt' => 1000,
-];
+class NewebPayRefundService
+{
+    private $merchantId;
+    private $hashKey;
+    private $hashIv;
 
-$post_data = bin2hex(openssl_encrypt(
-    http_build_query($refund_data),
-    'AES-256-CBC',
-    $hash_key,
-    OPENSSL_RAW_DATA,
-    $hash_iv
-));
+    public function __construct()
+    {
+        $this->merchantId = getenv('NEWEBPAY_MERCHANT_ID');
+        $this->hashKey = getenv('NEWEBPAY_HASH_KEY');
+        $this->hashIv = getenv('NEWEBPAY_HASH_IV');
+    }
 
-$ch = curl_init('https://ccore.newebpay.com/API/EWallet/Refund');
-curl_setopt_array($ch, [
-    CURLOPT_POST => true,
-    CURLOPT_POSTFIELDS => http_build_query([
-        'MerchantID_' => $merchant_id,
-        'PostData_' => $post_data,
-    ]),
-    CURLOPT_RETURNTRANSFER => true,
-]);
-$response = curl_exec($ch);
-curl_close($ch);
+    public function refundCreditCard($orderNo, $amount)
+    {
+        $apiUrl = getenv('NEWEBPAY_ENV') === 'production'
+            ? 'https://core.newebpay.com/API/CreditCard/Close'
+            : 'https://ccore.newebpay.com/API/CreditCard/Close';
+
+        $data = [
+            'RespondType' => 'JSON',
+            'Version' => '1.1',
+            'Amt' => $amount,
+            'MerchantOrderNo' => $orderNo,
+            'TimeStamp' => time(),
+            'IndexType' => 1,
+            'CloseType' => 2,
+        ];
+
+        $postData = $this->encrypt(http_build_query($data));
+
+        $ch = curl_init($apiUrl);
+        curl_setopt_array($ch, [
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => http_build_query([
+                'MerchantID_' => $this->merchantId,
+                'PostData_' => $postData,
+            ]),
+            CURLOPT_RETURNTRANSFER => true,
+        ]);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response, true);
+    }
+
+    public function refundEWallet($tradeNo, $orderNo, $amount)
+    {
+        $apiUrl = getenv('NEWEBPAY_ENV') === 'production'
+            ? 'https://core.newebpay.com/API/EWallet/Refund'
+            : 'https://ccore.newebpay.com/API/EWallet/Refund';
+
+        $data = [
+            'RespondType' => 'JSON',
+            'Version' => '1.0',
+            'TimeStamp' => time(),
+            'TradeNo' => $tradeNo,
+            'MerchantOrderNo' => $orderNo,
+            'Amt' => $amount,
+        ];
+
+        $postData = $this->encrypt(http_build_query($data));
+
+        $ch = curl_init($apiUrl);
+        curl_setopt_array($ch, [
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => http_build_query([
+                'MerchantID_' => $this->merchantId,
+                'PostData_' => $postData,
+            ]),
+            CURLOPT_RETURNTRANSFER => true,
+        ]);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response, true);
+    }
+
+    private function encrypt($data)
+    {
+        $encrypted = openssl_encrypt($data, 'AES-256-CBC', $this->hashKey,
+            OPENSSL_RAW_DATA, $this->hashIv);
+        return bin2hex($encrypted);
+    }
+}
+```
+
+### Node.js 退款功能
+
+```javascript
+const crypto = require('crypto');
+const axios = require('axios');
+
+class NewebPayRefundService {
+  constructor() {
+    this.merchantId = process.env.NEWEBPAY_MERCHANT_ID;
+    this.hashKey = process.env.NEWEBPAY_HASH_KEY;
+    this.hashIv = process.env.NEWEBPAY_HASH_IV;
+    this.isProduction = process.env.NEWEBPAY_ENV === 'production';
+  }
+
+  async refundCreditCard(orderNo, amount) {
+    const apiUrl = this.isProduction
+      ? 'https://core.newebpay.com/API/CreditCard/Close'
+      : 'https://ccore.newebpay.com/API/CreditCard/Close';
+
+    const data = {
+      RespondType: 'JSON',
+      Version: '1.1',
+      Amt: amount,
+      MerchantOrderNo: orderNo,
+      TimeStamp: Math.floor(Date.now() / 1000),
+      IndexType: 1,
+      CloseType: 2,
+    };
+
+    const postData = this.encrypt(new URLSearchParams(data).toString());
+
+    const { data: result } = await axios.post(apiUrl,
+      new URLSearchParams({
+        MerchantID_: this.merchantId,
+        PostData_: postData,
+      }).toString(),
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+    );
+
+    return result;
+  }
+
+  async refundEWallet(tradeNo, orderNo, amount) {
+    const apiUrl = this.isProduction
+      ? 'https://core.newebpay.com/API/EWallet/Refund'
+      : 'https://ccore.newebpay.com/API/EWallet/Refund';
+
+    const data = {
+      RespondType: 'JSON',
+      Version: '1.0',
+      TimeStamp: Math.floor(Date.now() / 1000),
+      TradeNo: tradeNo,
+      MerchantOrderNo: orderNo,
+      Amt: amount,
+    };
+
+    const postData = this.encrypt(new URLSearchParams(data).toString());
+
+    const { data: result } = await axios.post(apiUrl,
+      new URLSearchParams({
+        MerchantID_: this.merchantId,
+        PostData_: postData,
+      }).toString(),
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+    );
+
+    return result;
+  }
+
+  encrypt(data) {
+    const cipher = crypto.createCipheriv('aes-256-cbc', this.hashKey, this.hashIv);
+    let encrypted = cipher.update(data, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    return encrypted;
+  }
+}
+
+module.exports = NewebPayRefundService;
 ```
 
 ---
 
 ## 常見錯誤
 
-| 代碼 | 說明 |
-|-----|------|
-| CRE10001 | 無此交易紀錄 |
-| CRE10002 | 已退款或取消 |
-| CRE10003 | 退款金額錯誤 |
-| CRE10004 | 超過可退款期限 |
+| 代碼 | 說明 | 解決方式 |
+|------|------|---------|
+| CRE10001 | 無此交易紀錄 | 確認訂單編號/交易序號正確 |
+| CRE10002 | 已退款或取消 | 交易已被處理過 |
+| CRE10003 | 退款金額錯誤 | 退款金額不可大於原交易金額 |
+| CRE10004 | 超過可退款期限 | 信用卡一般為 180 天內 |
 
 ## 注意事項
 
-1. **退款期限**：信用卡一般為交易後 180 天內
-2. **部分退款**：可退款金額 ≤ 原交易金額
-3. **退款次數**：同一筆交易可多次部分退款
-4. **電子錢包**：需使用藍新交易序號 (TradeNo)
-
-## 相關 Skills
-
-- `/newebpay` - 總覽與環境設定
-- `/newebpay-checkout` - MPG 幕前支付串接
-- `/newebpay-query` - 交易查詢
+1. **退款期限**: 信用卡一般為交易後 180 天內
+2. **部分退款**: 可退款金額 ≤ 原交易金額
+3. **退款次數**: 同一筆交易可多次部分退款
+4. **電子錢包**: 需使用藍新交易序號 (TradeNo)

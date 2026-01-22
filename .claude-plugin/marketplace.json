@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "台灣第三方支付金流串接 Skills for Claude Code",
-    "version": "1.0.0"
+    "version": "2.0.0"
   },
   "plugins": [
     {
       "name": "newebpay",
       "source": "./plugins/newebpay",
-      "description": "藍新金流(NewebPay)完整串接 - 支付串接、交易查詢、退款",
-      "version": "1.0.0",
+      "description": "藍新金流(NewebPay)完整串接工具 - 支付串接、交易查詢、退款",
+      "version": "2.0.0",
       "keywords": ["newebpay", "藍新", "credit-card", "line-pay", "checkout", "query", "refund"]
     },
     {
@@ -29,6 +29,13 @@
       "description": "PAYUNi 統一金流串接",
       "version": "1.0.0",
       "keywords": ["payuni", "統一金流"]
+    },
+    {
+      "name": "payment-help",
+      "source": "./plugins/payment-help",
+      "description": "台灣金流服務比較與推薦工具",
+      "version": "2.0.0",
+      "keywords": ["payment", "comparison", "金流比較", "推薦"]
     }
   ]
 }

@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "PAYUNi 統一金流串接指南",
   "author": {
-    "name": "paid-tw"
+    "name": "paid-tw",
+    "email": "contact@paid.tw",
+    "url": "https://github.com/paid-tw"
   },
+  "homepage": "https://github.com/paid-tw/skills#payuni",
+  "repository": "https://github.com/paid-tw/skills",
   "license": "MIT",
   "keywords": ["taiwan", "payment", "payuni", "統一金流", "金流"]
 }

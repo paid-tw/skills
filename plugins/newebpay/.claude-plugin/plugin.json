@@ -1,12 +1,17 @@
 {
   "name": "newebpay",
-  "version": "1.0.0",
-  "description": "藍新金流(NewebPay)完整串接指南 - 支付串接、交易查詢、退款",
+  "version": "2.0.0",
+  "description": "藍新金流(NewebPay)完整串接工具 - 支付串接、交易查詢、退款",
   "author": {
-    "name": "paid-tw"
+    "name": "paid-tw",
+    "email": "contact@paid.tw",
+    "url": "https://github.com/paid-tw"
   },
+  "homepage": "https://github.com/paid-tw/skills#newebpay",
+  "repository": "https://github.com/paid-tw/skills",
   "license": "MIT",
   "keywords": ["taiwan", "payment", "newebpay", "藍新", "金流", "credit-card", "line-pay", "atm", "cvs"],
   "skills": ["newebpay", "newebpay-checkout", "newebpay-query", "newebpay-refund"],
-  "agents": ["payment-integrator"]
+  "agents": ["payment-integrator"],
+  "hooks": "./hooks/hooks.json"
 }
