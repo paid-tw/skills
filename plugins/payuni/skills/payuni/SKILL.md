@@ -35,7 +35,7 @@ user-invocable: true
 
 ## 參考資源
 
-- [PAYUNi 官方文件](https://www.payuni.com.tw/)
+- [PAYUNi 官方文件](https://docs.payuni.com.tw/)
 - 詳細 API 說明與錯誤碼對照將於後續版本提供
 
 ## 相關 Skills

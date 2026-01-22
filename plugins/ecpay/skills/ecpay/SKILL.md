@@ -31,7 +31,7 @@ user-invocable: true
 
 ## 參考資源
 
-- [ECPay 官方文件](https://www.ecpay.com.tw/Service/API_Dwnld)
+- [ECPay 官方文件](https://developers.ecpay.com.tw/)
 - 詳細 API 說明與錯誤碼對照將於後續版本提供
 
 ## 相關 Skills
