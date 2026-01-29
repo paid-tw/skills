@@ -1,7 +1,7 @@
 {
   "name": "payuni",
-  "version": "1.1.0",
-  "description": "PAYUNi 統一金流串接指南",
+  "version": "1.0.0",
+  "description": "統一金流(PAYUNi)完整串接工具 - 支付串接、交易查詢、Webhook 處理",
   "author": {
     "name": "paid-tw",
     "email": "contact@paid.tw",
@@ -10,5 +10,6 @@
   "homepage": "https://github.com/paid-tw/skills#payuni",
   "repository": "https://github.com/paid-tw/skills",
   "license": "MIT",
-  "keywords": ["taiwan", "payment", "payuni", "統一金流", "金流"]
+  "keywords": ["taiwan", "payment", "payuni", "統一金流", "金流", "credit-card", "line-pay", "atm", "cvs"],
+  "hooks": "./hooks/hooks.json"
 }
