@@ -41,6 +41,16 @@ paid-tw/skills/
 | `newebpay-query` | 交易查詢 API | "藍新查詢", "查詢訂單" |
 | `newebpay-refund` | 退款 API | "藍新退款", "信用卡退款" |
 
+### KryptoGO 穩定幣支付 (kryptogo-pay plugin)
+
+| Skill | 用途 | 觸發關鍵字 |
+|-------|------|-----------|
+| `kryptogo-pay` | 總覽與環境設定 | "KryptoGO", "穩定幣支付", "crypto payment" |
+| `kryptogo-pay-checkout` | 建立 Payment Intent 收款 | "KryptoGO 收款", "建立支付", "payment intent" |
+| `kryptogo-pay-query` | 查詢 Payment Intent | "KryptoGO 查詢", "支付狀態" |
+| `kryptogo-pay-webhook` | Webhook 回調處理 | "KryptoGO webhook", "回調", "callback" |
+| `kryptogo-pay-transfer` | 代幣轉帳/提領 | "KryptoGO 轉帳", "提領", "withdrawal" |
+
 ### 其他 Plugins
 
 | Plugin | 用途 | 觸發關鍵字 |
@@ -57,22 +67,29 @@ paid-tw/skills/
 2. **要串接藍新金流** → `newebpay` 或 `newebpay-checkout`
 3. **要查詢藍新交易** → `newebpay-query`
 4. **要藍新退款** → `newebpay-refund`
-5. **要串接綠界科技** → `ecpay`
-6. **要串接 PAYUNi** → `payuni`
+5. **要串接 KryptoGO 穩定幣支付** → `kryptogo-pay` 或 `kryptogo-pay-checkout`
+6. **要查詢 KryptoGO 支付狀態** → `kryptogo-pay-query`
+7. **要處理 KryptoGO Webhook** → `kryptogo-pay-webhook`
+8. **要 KryptoGO 轉帳/提領** → `kryptogo-pay-transfer`
+9. **要串接綠界科技** → `ecpay`
+10. **要串接 PAYUNi** → `payuni`
 
 ## 整合情境
 
 ### 常見支付功能對應
 
-| 功能需求 | 藍新 | 綠界 | PAYUNi |
-|---------|------|------|--------|
-| 信用卡付款 | ✅ | ✅ | ✅ |
-| LINE Pay | ✅ | ✅ | ✅ |
-| Apple Pay | ✅ | ✅ | ✅ |
-| ATM 轉帳 | ✅ | ✅ | ✅ |
-| 超商代碼 | ✅ | ✅ | ✅ |
-| 超商條碼 | ✅ | ✅ | ✅ |
-| 電子發票 | ❌ | ✅ | ❌ |
+| 功能需求 | 藍新 | KryptoGO | 綠界 | PAYUNi |
+|---------|------|----------|------|--------|
+| 信用卡付款 | ✅ | ❌ | ✅ | ✅ |
+| LINE Pay | ✅ | ❌ | ✅ | ✅ |
+| Apple Pay | ✅ | ❌ | ✅ | ✅ |
+| ATM 轉帳 | ✅ | ❌ | ✅ | ✅ |
+| 超商代碼 | ✅ | ❌ | ✅ | ✅ |
+| 超商條碼 | ✅ | ❌ | ✅ | ✅ |
+| 電子發票 | ❌ | ❌ | ✅ | ❌ |
+| 穩定幣（USDT/USDC）| ❌ | ✅ | ❌ | ❌ |
+| Webhook 回調 | ✅ | ✅ | ✅ | ✅ |
+| 代幣轉帳/提領 | ❌ | ✅ | ❌ | ❌ |
 
 ### 環境變數
 
@@ -83,6 +100,11 @@ paid-tw/skills/
 NEWEBPAY_MERCHANT_ID=MS12345678
 NEWEBPAY_HASH_KEY=your_hash_key
 NEWEBPAY_HASH_IV=your_hash_iv
+
+# KryptoGO 穩定幣支付
+KRYPTOGO_CLIENT_ID=your_client_id
+KRYPTOGO_STUDIO_API_KEY=your_studio_api_key
+KRYPTOGO_ORIGIN=your_domain
 
 # 綠界科技
 ECPAY_MERCHANT_ID=2000132
@@ -97,14 +119,20 @@ PAYUNI_HASH_IV=your_hash_iv
 
 ### 共同模式
 
-**加密流程（三家皆相同概念）**
+**傳統金流加密流程（藍新、綠界、PAYUNi）**
 1. 組織交易資料（JSON 或 Query String）
 2. AES256 加密
 3. SHA256 簽章
 4. Form POST 到金流平台
 
+**KryptoGO 穩定幣支付流程**
+1. 後端呼叫 API 建立 Payment Intent（帶 API Key）
+2. 前端使用 React SDK 或自訂 UI 引導用戶支付
+3. Webhook 回調通知支付狀態變更
+4. 回應 HTTP 200 確認收到
+
 **回傳處理**
-- NotifyURL：幕後通知（更新訂單狀態）
+- NotifyURL / Webhook：幕後通知（更新訂單狀態）
 - ReturnURL：前端導回（顯示結果頁）
 
 ## 回應指南
@@ -161,6 +189,9 @@ metadata:
 ## 相關資源
 
 - [藍新金流官網](https://www.newebpay.com)
+- [KryptoGO 官網](https://www.kryptogo.com)
+- [KryptoGO Studio](https://studio.kryptogo.com)
+- [KryptoGO API 文件](https://www.kryptogo.com/docs/api/payment)
 - [綠界科技官網](https://www.ecpay.com.tw)
 - [PAYUNi 官網](https://www.payuni.com.tw)
 - [Claude Code Plugins 文件](https://docs.anthropic.com/en/docs/claude-code/plugins)
