@@ -1,0 +1,15 @@
+{
+  "name": "kryptogo-pay",
+  "version": "1.0.0",
+  "description": "KryptoGO Payment 穩定幣支付串接工具 - 支付收款、交易查詢、Webhook 回調、提領轉帳",
+  "author": {
+    "name": "kryptogo",
+    "email": "support@kryptogo.com",
+    "url": "https://github.com/kryptogo"
+  },
+  "homepage": "https://github.com/kryptogo/make-a-kg-payment-skill#kryptogo-pay",
+  "repository": "https://github.com/kryptogo/make-a-kg-payment-skill",
+  "license": "MIT",
+  "keywords": ["crypto", "payment", "kryptogo", "stablecoin", "usdt", "usdc", "arbitrum", "web3", "wallet"],
+  "hooks": "./hooks/hooks.json"
+}

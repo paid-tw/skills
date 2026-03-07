@@ -5,7 +5,7 @@
     "email": "contact@paid.tw"
   },
   "metadata": {
-    "description": "台灣第三方金流 Skills for AI Agents - 藍新金流、綠界科技 ECPay、統一金流 PAYUNi",
+    "description": "台灣第三方金流 Skills for AI Agents - 藍新金流、綠界科技 ECPay、統一金流 PAYUNi、KryptoGO 穩定幣支付",
     "pluginRoot": "./plugins"
   },
   "plugins": [
@@ -22,6 +22,11 @@
     {
       "name": "payuni",
       "source": "./payuni",
+      "category": "payment"
+    },
+    {
+      "name": "kryptogo-pay",
+      "source": "./kryptogo-pay",
       "category": "payment"
     },
     {

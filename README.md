@@ -3,7 +3,7 @@
 [![Validate Plugins](https://github.com/paid-tw/skills/actions/workflows/validate.yml/badge.svg)](https://github.com/paid-tw/skills/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-台灣第三方金流 Skills for AI Agents - 藍新金流、綠界科技 ECPay、統一金流 PAYUNi
+台灣第三方金流 Skills for AI Agents - 藍新金流、綠界科技 ECPay、統一金流 PAYUNi、KryptoGO 穩定幣支付
 
 支援 Claude Code、Cursor、Codex、GitHub Copilot 等 AI coding agents。
 
@@ -12,6 +12,7 @@
 | 服務 | Plugin | 狀態 | 說明 |
 |------|--------|------|------|
 | 藍新金流 | `newebpay` | ✅ 可用 | 信用卡、LINE Pay、Apple Pay、ATM、超商 |
+| KryptoGO Pay | `kryptogo-pay` | ✅ 可用 | 穩定幣支付（USDT/USDC on Arbitrum）|
 | 綠界科技 | `ecpay` | 🚧 開發中 | 全方位金流、電子發票 |
 | PAYUNi | `payuni` | 🚧 開發中 | 統一集團金流服務 |
 
@@ -27,6 +28,7 @@ npx skills add paid-tw/skills --list
 
 # 選擇性安裝
 npx skills add paid-tw/skills --skill newebpay      # 只裝藍新金流
+npx skills add paid-tw/skills --skill kryptogo-pay  # 只裝 KryptoGO 穩定幣支付
 npx skills add paid-tw/skills --skill ecpay         # 只裝綠界科技
 npx skills add paid-tw/skills --skill payuni        # 只裝 PAYUNi
 
@@ -101,9 +103,30 @@ npx skills add paid-tw/skills --skill payment-help
 **觸發關鍵字**：藍新、NewebPay、藍新金流
 
 **支援的支付方式**：
+
 - 信用卡（一次付清、分期、紅利）
 - 行動支付（LINE Pay、Apple Pay、Google Pay）
 - ATM 轉帳、超商代碼/條碼
+
+### kryptogo-pay（KryptoGO 穩定幣支付）
+
+安裝 `kryptogo-pay` plugin 後可使用以下 skills：
+
+| Skill | 說明 | 使用時機 |
+|-------|------|---------|
+| `/kryptogo-pay` | 總覽與環境設定 | 初次了解、環境設定 |
+| `/kryptogo-pay-checkout` | 建立 Payment Intent 收款 | 建立支付、穩定幣收款 |
+| `/kryptogo-pay-query` | 查詢 Payment Intent | 查詢支付狀態 |
+| `/kryptogo-pay-webhook` | Webhook 回調處理 | 接收支付狀態通知 |
+| `/kryptogo-pay-transfer` | 代幣轉帳/提領 | USDT/USDC 轉帳提領 |
+
+**觸發關鍵字**：KryptoGO、穩定幣支付、crypto payment、USDT 收款
+
+**支援的支付方式**：
+
+- 穩定幣（USDT、USDC on Arbitrum）
+- KryptoGO Wallet、MetaMask、WalletConnect
+- QR Code 轉帳
 
 ### ecpay
 
@@ -155,6 +178,11 @@ npx skills add paid-tw/skills --skill payment-help
 | newebpay-checkout | 藍新串接、建立交易、MPG |
 | newebpay-query | 藍新查詢、查詢訂單、交易狀態 |
 | newebpay-refund | 藍新退款、信用卡退款、取消交易 |
+| kryptogo-pay | KryptoGO、穩定幣支付、crypto payment |
+| kryptogo-pay-checkout | KryptoGO 收款、建立支付、payment intent |
+| kryptogo-pay-query | KryptoGO 查詢、支付狀態 |
+| kryptogo-pay-webhook | KryptoGO webhook、回調、callback |
+| kryptogo-pay-transfer | KryptoGO 轉帳、提領、withdrawal |
 | payment-help | 台灣金流、支付整合、哪個金流 |
 
 ## 目錄結構
@@ -175,6 +203,18 @@ paid-tw/skills/
 │   │       │   └── references/
 │   │       ├── newebpay-query/     # 查詢
 │   │       └── newebpay-refund/    # 退款
+│   ├── kryptogo-pay/          # KryptoGO 穩定幣支付 plugin
+│   │   ├── .claude-plugin/
+│   │   │   └── plugin.json
+│   │   └── skills/
+│   │       ├── kryptogo-pay/          # 總覽
+│   │       ├── kryptogo-pay-checkout/ # 收款
+│   │       │   └── references/
+│   │       ├── kryptogo-pay-query/    # 查詢
+│   │       ├── kryptogo-pay-webhook/  # Webhook
+│   │       │   └── references/
+│   │       └── kryptogo-pay-transfer/ # 轉帳
+│   │           └── references/
 │   ├── ecpay/                 # 綠界科技 plugin
 │   └── payuni/                # PAYUNi plugin
 ├── README.md
@@ -203,6 +243,7 @@ paid-tw/skills/
 ## 相關資源
 
 - [藍新金流](https://www.newebpay.com)
+- [KryptoGO Payment](https://payment.kryptogo.com)
 - [綠界科技](https://www.ecpay.com.tw)
 - [PAYUNi](https://www.payuni.com.tw)
 
