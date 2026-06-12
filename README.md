@@ -13,7 +13,7 @@
 |------|--------|------|------|
 | 藍新金流 | `newebpay` | ✅ 可用 | 信用卡、LINE Pay、Apple Pay、ATM、超商 |
 | KryptoGO Pay | `kryptogo-pay` | ✅ 可用 | 穩定幣支付（USDT/USDC on Arbitrum）|
-| 綠界科技 | `ecpay` | 🚧 開發中 | 全方位金流、電子發票 |
+| 綠界科技 | `ecpay` | ✅ 可用 | 全方位金流（信用卡、ATM、超商）|
 | PAYUNi | `payuni` | 🚧 開發中 | 統一集團金流服務 |
 
 ## 安裝
@@ -130,7 +130,16 @@ npx skills add paid-tw/skills --skill payment-help
 
 ### ecpay
 
-🚧 開發中
+| Skill | 說明 |
+|-------|------|
+| `/ecpay` | 綠界整合總覽與環境設定 |
+| `/ecpay-checkout` | AIO 全方位金流串接（CheckMacValue 簽章、ReturnURL 通知、冪等入帳、測試指南）|
+
+**支援的支付方式**：
+
+- 信用卡（一次付清、分期、3D 驗證）
+- Apple Pay
+- ATM 轉帳、超商代碼/條碼（非同步付款）
 
 ### payuni
 
