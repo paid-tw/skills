@@ -26,6 +26,7 @@
 2. 使用測試環境的金鑰解正式環境的資料 (或反之)
 3. 未正確移除 PKCS7 padding
 4. 加密模式設定錯誤
+5. **用標準 PKCS7(pad ≤ 16)處理藍新的 padding** — 藍新以 32 bytes 為單位做 padding(官方 PHP 範例 `addpadding()` 的 `$block = 32`),pad byte 可達 0x20,Node.js 等語言內建的 autoPadding 解不開(見下方 Node.js 特別注意)
 
 **解決方案**:
 ```php
@@ -58,6 +59,26 @@ function decrypt_trade_info($encrypted_hex, $key, $iv) {
     }
     
     return $decrypted;
+}
+```
+
+**Node.js 特別注意 — 真實通知解密隨機失敗(bad decrypt)**:
+
+**症狀特徵**: 自己 `encrypt()` 再 `decrypt()` 測試都正常,但藍新送來的真實 Notify 約半數解密失敗。
+
+**原因**: Node 的 `crypto` 預設 autoPadding 只接受標準 PKCS7(pad byte ≤ 16),但藍新以 32 bytes 為單位 padding,pad byte 落在 17~32 時 `decipher.final()` 直接丟 `bad decrypt`。因為自己加密用的是標準 PKCS7,自我測試永遠發現不了這個問題。
+
+```javascript
+// 正確: 關掉 autoPadding,自行驗證並移除 1~32 的 padding
+function decryptTradeInfo(encryptedHex, hashKey, hashIv) {
+  const decipher = crypto.createDecipheriv('aes-256-cbc', hashKey, hashIv);
+  decipher.setAutoPadding(false);
+  const buf = Buffer.concat([decipher.update(encryptedHex, 'hex'), decipher.final()]);
+  const pad = buf[buf.length - 1];
+  if (!(pad >= 1 && pad <= 32 && pad <= buf.length)) {
+    throw new Error('padding 異常(HashKey/HashIV 不對?)');
+  }
+  return buf.slice(0, buf.length - pad).toString('utf8');
 }
 ```
 
@@ -277,6 +298,13 @@ if ($amount >= 50000) {
    }
    ```
 
+5. **網域要填 canonical(www/非 www 要注意)**
+   ```
+   NotifyURL 填 https://example.com 但主機把它 307/308 轉址到
+   https://www.example.com 時,金流商的 POST 不會跟著轉址 — 通知直接丟失。
+   NotifyURL/ReturnURL 一律填「不會被轉址」的最終網域。
+   ```
+
 ### Q10: ReturnURL 和 NotifyURL 收到不同結果
 
 **症狀**: 前端顯示成功但後端顯示失敗 (或反之)
@@ -474,6 +502,21 @@ function reconcile_orders($date) {
 // 每天凌晨執行
 // 0 2 * * * /usr/bin/php /path/to/reconcile.php
 ```
+
+### Q16: NotifyURL 回 4xx/5xx 之後,藍新的重試行為與自救
+
+**症狀**: NotifyURL 收到了通知但處理失敗(回 400/500),訂單卡在未付款
+
+**藍新的行為(正式環境實測)**:
+1. 失敗後數秒內會連續重試約 3 次
+2. 全部失敗後,寄「API 串接 Notify URL 觸發失敗通知信」到商店聯絡信箱
+3. **之後不再重送** — 這筆通知永久丟失,只能靠對帳補單
+
+**自救方案(層層保險)**:
+1. **ReturnURL 當場對帳**: 消費者付款完導回時,若訂單仍是「處理中」,立即呼叫「單筆交易查詢」API 確認並補單 — 這是最即時的補單時機,不用等排程
+2. **定時對帳收尾**(見 Q15): 處理消費者付完款直接關閉視窗、沒有走 ReturnURL 的情況
+3. **對帳要查所有發出過的訂單編號**: 若付款頁每次開啟都產生新的 MerchantOrderNo(藍新拒收重複單號的常見做法),消費者「刷卡成功後又重開付款頁」會讓最新單號不是實際付款那筆 — 單號要全部留底,對帳時逐一查詢
+4. **Notify 處理失敗時留下完整現場**: 至少記錄錯誤訊息、收到的欄位名、TradeInfo 長度 — 通知不會重送,沒有 log 就永遠查不到死因
 
 ## 常見錯誤訊息對照
 

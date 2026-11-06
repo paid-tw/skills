@@ -84,3 +84,5 @@ NEWEBPAY_ENV=test  # test 或 production
 2. 時間戳記容許誤差 ±120 秒
 3. 訂單編號不可重複，限 30 字元
 4. ReturnURL/NotifyURL 只接受 80/443 Port
+5. 藍新 AES padding 以 32 bytes 為單位（pad byte 可達 0x20），非標準 PKCS7 — Node.js 等語言內建的 autoPadding 解不開真實通知，須關閉後自行移除 padding
+6. Notify 失敗藍新只在數秒內重試幾次，之後寄失敗通知信就不再重送 — ReturnURL 導回時要用交易查詢 API 當場對帳補單
