@@ -59,8 +59,12 @@ class NewebPayService
         ];
     }
 
-    public function handleNotify($tradeInfo)
+    public function handleNotify($tradeInfo, $tradeSha)
     {
+        // 先驗章再解密 — 不驗 TradeSha 等於接受任何人偽造的付款通知
+        if ($this->generateSha($tradeInfo) !== $tradeSha) {
+            throw new Exception('TradeSha 驗證失敗');
+        }
         $decrypted = $this->decrypt($tradeInfo);
         return json_decode($decrypted, true);
     }
@@ -77,7 +81,8 @@ class NewebPayService
     {
         $decrypted = openssl_decrypt(hex2bin($data), 'AES-256-CBC', $this->hashKey,
             OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $this->hashIv);
-        return rtrim($decrypted, "\x00..\x1F");
+        // 藍新 padding 以 32 bytes 為單位,pad 字元可達 \x20 — 範圍只到 \x1F 會殘留空白
+        return rtrim($decrypted, "\x00..\x20");
     }
 
     private function generateSha($tradeInfo)
@@ -109,9 +114,9 @@ $formData = $service->createOrder(
 );
 
 // 處理回調
-$result = $service->handleNotify($_POST['TradeInfo']);
+$result = $service->handleNotify($_POST['TradeInfo'], $_POST['TradeSha']);
 if ($result['Status'] === 'SUCCESS') {
-    // 更新訂單狀態
+    // 更新訂單狀態(建議以 TradeNo 做冪等,避免重複入帳)
 }
 ```
 
@@ -159,9 +164,12 @@ class NewebPayService {
     };
   }
 
-  handleNotify(tradeInfo) {
-    const decrypted = this.decrypt(tradeInfo);
-    return JSON.parse(decrypted);
+  handleNotify(tradeInfo, tradeSha) {
+    // 先驗章再解密 — 不驗 TradeSha 等於接受任何人偽造的付款通知
+    if (this.generateSha(tradeInfo) !== tradeSha) {
+      throw new Error('TradeSha 驗證失敗');
+    }
+    return JSON.parse(this.decrypt(tradeInfo));
   }
 
   encrypt(data) {
@@ -172,10 +180,17 @@ class NewebPayService {
   }
 
   decrypt(data) {
+    // 藍新的 padding 以 32 bytes 為單位(官方 PHP 範例 addpadding 的 $block = 32),
+    // pad byte 可達 0x20;Node 預設的 PKCS7 autoPadding 只接受 <= 0x10,
+    // 真實通知約半數會在 decipher.final() 丟 "bad decrypt" — 必須關掉後自行移除
     const decipher = crypto.createDecipheriv('aes-256-cbc', this.hashKey, this.hashIv);
-    let decrypted = decipher.update(data, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
-    return decrypted.replace(/[\x00-\x1F]+$/g, '');
+    decipher.setAutoPadding(false);
+    const buf = Buffer.concat([decipher.update(data, 'hex'), decipher.final()]);
+    const pad = buf[buf.length - 1];
+    if (!(pad >= 1 && pad <= 32 && pad <= buf.length)) {
+      throw new Error('padding 異常(HashKey/HashIV 不對?)');
+    }
+    return buf.slice(0, buf.length - pad).toString('utf8');
   }
 
   generateSha(tradeInfo) {
@@ -211,9 +226,14 @@ app.get('/checkout', (req, res) => {
 
 // 背景通知
 app.post('/payment/notify', express.urlencoded({ extended: true }), (req, res) => {
-  const result = newebpay.handleNotify(req.body.TradeInfo);
+  let result;
+  try {
+    result = newebpay.handleNotify(req.body.TradeInfo, req.body.TradeSha);
+  } catch (err) {
+    return res.status(400).send('Invalid'); // 驗章/解密失敗一律拒收
+  }
   if (result.Status === 'SUCCESS') {
-    // 更新訂單狀態
+    // 更新訂單狀態(建議以 TradeNo 做冪等,避免重複入帳)
   }
   res.send('OK');
 });
